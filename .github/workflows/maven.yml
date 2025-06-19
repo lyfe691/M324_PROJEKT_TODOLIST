@@ -15,12 +15,12 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  backend-tests:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -28,8 +28,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Test
-      run: mvn -f backend/ --batch-mode -Dmaven.test.failure.ignore=true test
+    - name: Run tests
+      run: mvn -B test --file backend/pom.xml
 
     - name: Build with Maven
       run: mvn -B package --file backend/pom.xml
