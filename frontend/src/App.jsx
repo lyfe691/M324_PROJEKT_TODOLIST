@@ -19,34 +19,35 @@ function App() {
 
   // handle form submission - add new task
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!taskdescription.trim()) return;
-    
-    console.log("Sending task description to Spring-Server: " + taskdescription);
-    
-    try {
-      const response = await fetch("http://localhost:8080/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ taskdescription: taskdescription })
-      });
+  event.preventDefault();
+  if (!taskdescription.trim()) return;
 
-      if (response.ok) {
-        console.log("Task successfully added to Spring-Server");
-        setTaskdescription("");
-        toast.success("Aufgabe erfolgreich hinzugefügt!");
-        // Refresh the todo list instead of reloading the page
-        await fetchTodos();
-      } else {
-        throw new Error("Failed to add task");
-      }
-    } catch (error) {
-      console.error("Error adding task:", error);
-      toast.error("Fehler beim Hinzufügen der Aufgabe");
+  const createdAt = new Date().toISOString(); // Zeitstempel erzeugen
+
+  try {
+    const response = await fetch("http://localhost:8080/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        taskdescription: taskdescription,
+        createdAt: createdAt
+      })
+    });
+
+    if (response.ok) {
+      setTaskdescription("");
+      toast.success("Aufgabe erfolgreich hinzugefügt!");
+      await fetchTodos();
+    } else {
+      throw new Error("Failed to add task");
     }
+  } catch (error) {
+    console.error("Error adding task:", error);
+    toast.error("Fehler beim Hinzufügen der Aufgabe");
   }
+}
 
   // update input field state
   const handleChange = event => {
@@ -141,28 +142,35 @@ function App() {
               Noch keine Aufgaben vorhanden. Fügen Sie Ihre erste Aufgabe hinzu!
             </p>
           ) : (
-            <ul className="todo-list">
-              {todos.map((todo, index) => (
-                <li key={todo.taskdescription} className="todo-item">
-                  <div className="todo-content">
-                    <strong>Task {index + 1}</strong>
-                    <span>{todo.taskdescription}</span>
-                  </div>
-                  <button
-                    onClick={(event) => handleDelete(event, todo.taskdescription)}
-                    className="complete-button"
-                    title="Mark as complete"
-                  >
-                    ✓
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </main>
-    </div>
-  );
+
+          <ul className="todo-list">
+            {todos.map((todo, index) => (
+              <li key={todo.taskdescription} className="todo-item">
+                <div className="todo-content">
+                  <strong>Task {index + 1}</strong>
+                  <span>{todo.taskdescription}</span>
+                  {todo.createdAt && (
+                    <small style={{ color: "#888" }}>
+                      erstellt am: {new Date(todo.createdAt).toLocaleString()}
+                    </small>
+                  )}
+                </div>
+                <button
+                  onClick={(event) => handleDelete(event, todo.taskdescription)}
+                  className="complete-button"
+                  title="Mark as complete"
+                >
+                  ✓
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </main>
+  </div>
+);
+
 }
 
 export default App;

@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,26 +57,30 @@ public class DemoApplication {
 	}
 
 	@CrossOrigin
-	@PostMapping("/tasks")
-	public String addTask(@RequestBody String taskdescription) {
-		System.out.println("API EP '/tasks': '" + taskdescription + "'");
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			Task task;
-			task = mapper.readValue(taskdescription, Task.class);
-			for (Task t : tasks) {
-				if (t.getTaskdescription().equals(task.getTaskdescription())) {
-					System.out.println(">>>task: '" + task.getTaskdescription() + "' already exists!");
-					return "redirect:/"; // duplicates will be ignored
-				}
-			}
-			System.out.println("...adding task: '" + task.getTaskdescription() + "'");
-			tasks.add(task);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return "redirect:/";
-	}
+    @PostMapping("/tasks")
+    public String addTask(@RequestBody String taskdescription) {
+        System.out.println("API EP '/tasks': '" + taskdescription + "'");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Task task;
+            task = mapper.readValue(taskdescription, Task.class);
+            for (Task t : tasks) {
+                if (t.getTaskdescription().equals(task.getTaskdescription())) {
+                    System.out.println(">>>task: '" + task.getTaskdescription() + "' already exists!");
+                    return "redirect:/"; 
+                }
+            }
+            // Zeitstempel setzen, falls nicht vorhanden
+            if (task.getCreatedAt() == null || task.getCreatedAt().isEmpty()) {
+                task.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
+            }
+            System.out.println("...adding task: '" + task.getTaskdescription() + "' at " + task.getCreatedAt());
+            tasks.add(task);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/";
+    }
 
 	@CrossOrigin
 	@PostMapping("/delete")
