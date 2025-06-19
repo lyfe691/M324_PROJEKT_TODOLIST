@@ -10,7 +10,8 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
-		assertTrue(true, "alles gut");
+		System.out.println("TEST LÄUFT: Spring Boot Kontext geladen erfolgreich!");
+		assertTrue(true, "Spring Boot Kontext sollte erfolgreich geladen werden");
 	}
 
 }
