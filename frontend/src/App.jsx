@@ -1,29 +1,51 @@
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [taskdescription, setTaskdescription] = useState("");
 
+  // fetch todos from server
+  const fetchTodos = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/");
+      const data = await response.json();
+      setTodos(data);
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      toast.error("Fehler beim Laden der Aufgaben");
+    }
+  };
+
   // handle form submission - add new task
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!taskdescription.trim()) return;
     
     console.log("Sending task description to Spring-Server: " + taskdescription);
-    fetch("http://localhost:8080/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ taskdescription: taskdescription })
-    })
-    .then(response => {
-      console.log("Receiving answer after sending to Spring-Server: ");
-      console.log(response);
-      window.location.href = "/";
-      setTaskdescription("");
-    })
-    .catch(error => console.log(error))
+    
+    try {
+      const response = await fetch("http://localhost:8080/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ taskdescription: taskdescription })
+      });
+
+      if (response.ok) {
+        console.log("Task successfully added to Spring-Server");
+        setTaskdescription("");
+        toast.success("Aufgabe erfolgreich hinzugefügt!");
+        // Refresh the todo list instead of reloading the page
+        await fetchTodos();
+      } else {
+        throw new Error("Failed to add task");
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast.error("Fehler beim Hinzufügen der Aufgabe");
+    }
   }
 
   // update input field state
@@ -33,31 +55,59 @@ function App() {
 
   // fetch todos on component mount
   useEffect(() => {
-    fetch("http://localhost:8080/").then(response => response.json()).then(data => {
-      setTodos(data);
-    });
+    fetchTodos();
   }, []);
 
   // delete task when done button clicked
-  const handleDelete = (event, taskdescription) => {
+  const handleDelete = async (event, taskdescription) => {
     console.log("Sending task description to delete on Spring-Server: " + taskdescription);
-    fetch(`http://localhost:8080/delete`, {
-      method: "POST",
-      body: JSON.stringify({ taskdescription: taskdescription }),
-      headers: {
-        "Content-Type": "application/json"
+    
+    try {
+      const response = await fetch(`http://localhost:8080/delete`, {
+        method: "POST",
+        body: JSON.stringify({ taskdescription: taskdescription }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        console.log("Task successfully deleted from Spring-Server");
+        toast.success("Aufgabe erfolgreich erledigt!");
+        // Update the local state instead of reloading the page
+        setTodos(prevTodos => prevTodos.filter(todo => todo.taskdescription !== taskdescription));
+      } else {
+        throw new Error("Failed to delete task");
       }
-    })
-    .then(response => {
-      console.log("Receiving answer after deleting on Spring-Server: ");
-      console.log(response);
-      window.location.href = "/";
-    })
-    .catch(error => console.log(error))
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast.error("Fehler beim Löschen der Aufgabe");
+    }
   }
 
   return (
     <div className="app">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            style: {
+              background: '#4caf50',
+            },
+          },
+          error: {
+            style: {
+              background: '#f44336',
+            },
+          },
+        }}
+      />
+      
       <header className="header">
         <h1>ToDo Liste</h1>
         <span className="task-count">{todos.length} Tasks</span>
