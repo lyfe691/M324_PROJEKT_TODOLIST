@@ -1,11 +1,14 @@
-/* Minimal CSS reset for MUI */
+/* Clean minimal reset - perfect for shadcn later */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
 }
 
 #root {
