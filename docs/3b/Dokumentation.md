@@ -1,25 +1,14 @@
+# Dokumentation – m324 SideQuest 3b
+
 ---
- 
-<!-- SQ3B Dokumentation -->
- 
-<div align="center">
-  <h1>SQ3B</h1>
-  <p><em>Dokumentation</em></p>
-</div>
- 
+
+**Team:**
+- Yanis Sebastian Zürcher
+- Jason Bichsel
+- Dominik Könitzer
+
 ---
- 
-## Titelblatt
- 
-<div style="text-align: left; margin: 20px 0;">
-  <strong>Projekt:</strong> SQ3B<br>
-  <strong>Modul:</strong> m324 <br>
-  <strong>Autoren:</strong> Yanis Sebastian Zürcher & Jason Bichsel<br>
-  <strong>Abgabedatum:</strong> 19.06.2025
-</div>
- 
----
- 
+
 ## 1. Lokale Umsetzung
  
 ### 1.1 Branch erstellen
