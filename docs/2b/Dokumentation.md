@@ -79,6 +79,7 @@ User Stories folgen dem Format:
 *Als \[Rolle] möchte ich \[Ziel/Wunsch], damit \[Nutzen].*
 
 EG: 
+```	
 	name: 🧩 User Story
 	about: Erstelle eine neue User Story
 	title: "[User Story] "
@@ -99,7 +100,7 @@ EG:
 	---
 	### 📎 Weitere Hinweise
 	(Optional: Screenshots, Links, technische Hinweise …)
-
+```
 
 Dazu gehören Akzeptanzkriterien, die definieren, wann die Story als erledigt gilt.
 
