@@ -13,7 +13,7 @@
  
 <div style="text-align: left; margin: 20px 0;">
   <strong>Projekt:</strong> SQ3B<br>
-  <strong>Modul:</strong> M324 <br>
+  <strong>Modul:</strong> m324 <br>
   <strong>Autoren:</strong> Yanis Sebastian Zürcher & Jason Bichsel<br>
   <strong>Abgabedatum:</strong> 19.06.2025
 </div>
@@ -99,15 +99,15 @@ branch 'feature/uix' set up to track 'origin/feature/uix'.
  
 Anschliessend erstellte Yanis die folgende Pull Request:
  
-![pr img](/Docs/images/pr-img.png) 
+![pr img](./images/pr-img.png) 
 
 <small>**Abbildung 1:** Merge der Pull Request auf GitHub</small>
  
 ### 2.2 Issue-Prüfung
  
-Meine Aufgabe war es, die Pull Request zu überprüfen und zu testen. Dafür habe ich das zugehörige Issue geprüft:
+Jason's Aufgabe war es, die Pull Request zu überprüfen und zu testen. Dafür habe er das zugehörige Issue geprüft:
  
-![issue img](/Docs/images/issue-img.png) 
+![issue img](./images/issue-img.png) 
 
 <small>**Abbildung 2:** Das zugehörige Issue, welches durch die Pull Request gelöst wird</small>
  
