@@ -1,4 +1,4 @@
-# This workflow will build and test both frontend (React/Vitest) and backend (Java/Maven) projects
+# This workflow will build, test, and deploy both frontend (React/Vitest) and backend (Java/Maven) projects
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests
 
 name: CI/CD Pipeline
@@ -69,3 +69,43 @@ jobs:
         path: frontend/test-results.xml
         reporter: java-junit
         fail-on-error: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    needs: [backend-tests, frontend-tests]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Build and Deploy Backend
+      run: |
+        mvn -B package --file backend/pom.xml
+        # Add deployment commands for backend here
+
+    - name: Build and Deploy Frontend
+      run: |
+        npm ci --prefix frontend
+        npm run build --prefix frontend
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./frontend/dist
+        cname: # Add your custom domain here if you have one
