@@ -1,39 +1,21 @@
-# Kurzanleitung für die Installation der Entwicklungsumgebung zum Basisprojekt im Modul 324
+## CI/CD-Pipeline
 
-## TLDR
+Dieses Projekt verwendet eine GitHub Actions Pipeline, die bei jedem Merge Request (Pull Request) auf den Branch `main` automatisch ausgeführt wird.
 
-ToDo-Liste mit React (frontend) und Spring (backend). Weitere Details sind in den
-Kommentaren vor allem in App.js zu finden.
+### Ablauf:
+- **Backend (Java + Maven)**  
+  - Führt automatisierte Tests aus (`mvn test`)  
+  - Baut ein `.jar`-Artefakt (`mvn package`)
 
-## Relevante Dateien in den Teil-Projekten (Verzeichnisse):
+- **Frontend (React + Vitest)**  
+  - Führt Tests mit Vitest aus (`npm run test:run`)  
+  - Erstellt ein Produktionsbuild im Ordner `dist/` (`npm run build`)
 
-1. diese Beschreibung
-2. frontend (Tools: npm und VSCode)
-	* App.js
+### Artefakte:
+Die gebauten Artefakte (Backend `.jar`, Frontend `dist/`) werden nach jedem Lauf als **Download-Artefakte** im jeweiligen Actions-Run bereitgestellt. Sie können manuell heruntergeladen und lokal verwendet werden, z. B.:
 
-3. backend (Eclipse oder VS-Code)
-	* DemoApplication.java
-	* Task.java
-	* pom.xml (JAR configuration, mit div. Plugins s.u.)
+- Backend starten:  
+  `java -jar target/app.jar`
 
-## Inbetriebnahme
-
-1. forken oder clonen
-1. *backend* in Eclipse importieren und mit Maven starten, oder in VS-Code via Java Extension Pack. Ohne Persistenz - nach dem Serverneustart sind die Todos futsch. Läuft auf default port 8080.
-2. Im Terminal im *frontend* Verzeichnis
-	1. mit `npm install` benötige Module laden
-	2. mit `npm run dev` den Frontend-Server starten
-
-## Benutzung
-
-1. http://localhost:5173 zeigt das Frontend an. Hier kann man Tasks eingeben, die sofort darunter in der Liste mit einem *Done*-Button angezeigt werden.
-2. Klickt man auf den *Done*-Button eines Tasks wird dieser aus der Liste entfernt (und natürlich auch von Backend-Server).
-3. Die Task Beschreibungen müssen eindeutig (bzw. einmalig) sein.
-
-### Anstehende Aufgaben
-
-- Erweiterung der Funktionalität durch die Lernenden
-- Alternatives Backend für eine VM (WAR Konfiguration)
-- Test Umbegung mit Unit-Tests erweitern
-
-(Ausgaben für white-box debugging sind bereits auf den beiden Server vorhanden)
+- Frontend lokal serven:  
+  `npx serve dist/`
